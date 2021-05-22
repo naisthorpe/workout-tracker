@@ -70,7 +70,7 @@ app.post("/api/workouts", ( req, res) => {
 
 // Route for Update Workout
 app.put("/api/workouts/:id", (req, res) => {
-  db.Note.create(req.body)
+  db.Workout.update(req.body)
     .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.ObjectId(req.params.id)}))
     .then(dbWorkout => {
       res.json(dbWorkout);
