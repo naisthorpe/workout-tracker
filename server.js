@@ -18,13 +18,23 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true });
 
-// route for base page root
+/* HTML Routes */
+/* =========== */
+
+// Route for base page root
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "/public/index.html")));
 
-// Set up route for stats
+// Route for Exercise entry page
+app.get("/exercise", (req, res) => res.sendFile(path.join(__dirname, "/public/exercise.html")));
+
+// Route for Stats
 app.get("/stats", (req, res) => res.sendFile(path.join(__dirname, "/public/stats.html")));
 
-app.get("/exercise", (req, res) => {
+/* API Routes */
+/* ========== */
+
+// Route for All Workouts 
+app.get("/", (req, res) => {
   db.Workout.find({})
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -34,6 +44,7 @@ app.get("/exercise", (req, res) => {
     });
 });
 
+// Route for Specific Workout
 app.get("/user", (req, res) => {
   db.User.find({})
     .then(dbUser => {
@@ -44,6 +55,7 @@ app.get("/user", (req, res) => {
     });
 });
 
+// Route for Create Workout
 app.post("/submit", ({ body }, res) => {
   db.Note.create(body)
     .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
@@ -55,6 +67,10 @@ app.post("/submit", ({ body }, res) => {
     });
 });
 
+// Route for Update Workout
+
+
+/*
 app.get("/populateduser", (req, res) => {
   // TODO
   // =====
@@ -72,6 +88,7 @@ app.get("/populateduser", (req, res) => {
     })
 
 });
+*/
 
 // Start the server
 app.listen(PORT, () => {
