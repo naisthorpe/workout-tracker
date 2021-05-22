@@ -1,7 +1,6 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const mongojs = require("mongojs");
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
@@ -31,11 +30,12 @@ app.get("/exercise", (req, res) => res.sendFile(path.join(__dirname, "/public/ex
 // Route for Stats
 app.get("/stats", (req, res) => res.sendFile(path.join(__dirname, "/public/stats.html")));
 
+
 /* API Routes */
 /* ========== */
 
 // Route for All Workouts 
-app.get("/", (req, res) => {
+app.get("/api/workouts", (req, res) => {
   db.Workout.find({})
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 // Route for Specific Workout
-app.get("/:id", (req, res) => {
+app.get("api/workouts/:id", (req, res) => {
   db.Workout.find({ _id: mongoose.ObjectId(req.params.id) })
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -57,9 +57,9 @@ app.get("/:id", (req, res) => {
 });
 
 // Route for Create Workout
-app.post("/", ( req, res) => {
+app.post("/api/workouts", ( req, res) => {
   db.Workout.create(req.body)
-    .then(() => db.Workout.create({}, { new: true }))
+    .then(() => db.Workout.create({}))
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -69,9 +69,9 @@ app.post("/", ( req, res) => {
 });
 
 // Route for Update Workout
-app.put("/:id", (req, res) => {
+app.put("/api/workouts/:id", (req, res) => {
   db.Note.create(req.body)
-    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.ObjectId(req.params.id)}, { $push: { notes: _id } }, { new: true }))
+    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.ObjectId(req.params.id)}))
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
