@@ -1,41 +1,36 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ResistanceSchema = new Schema({
+// Exercise schema includes keys from both exercise types
+// Null values won't be added when specific exercise is created
+const ExerciseSchema = new Schema({
     
+    // Cardio or Resistance
     type: {
         type: String
     },
+    // Cardio or Resistance
     name: {
         type: String
     },
+    // Cardio or Resistance
     duration: {
         type: Number
     }, 
+    // Cardio
     distance: { 
         type: Number
-    }
-
-});
-
-const CardioSchema = new Schema({
-    
-    type: {
-        type: String
     },
-    name: {
-        type: String
-    },
+    // Resistance
     weight: {
         type: Number
-    }, 
+    },
+    // Resistance 
     sets: { 
         type: Number
     },
+    // Resistance
     reps: {
-        type: Number
-    }, 
-    duration: {
         type: Number
     }
 
@@ -46,11 +41,8 @@ const WorkoutSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    resistance: [
-        ResistanceSchema
-    ],
-    cardio: [
-        CardioSchema
+    exercises: [
+        ExerciseSchema
     ]
 });
 

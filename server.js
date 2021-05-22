@@ -47,7 +47,7 @@ app.get("/api/workouts", (req, res) => {
 
 // Route for Specific Workout
 app.get("api/workouts/:id", (req, res) => {
-  db.Workout.find({ _id: mongoose.ObjectId(req.params.id) })
+  db.Workout.find({ _id: mongoose.Types.ObjectId(req.params.id) })
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -71,7 +71,7 @@ app.post("/api/workouts", ( req, res) => {
 // Route for Update Workout
 app.put("/api/workouts/:id", (req, res) => {
   db.Workout.update(req.body)
-    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.ObjectId(req.params.id)}))
+    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.Types.ObjectId(req.params.id)}))
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
