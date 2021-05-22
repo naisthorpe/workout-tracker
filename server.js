@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const mongojs = require("mongojs");
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
@@ -45,10 +46,10 @@ app.get("/", (req, res) => {
 });
 
 // Route for Specific Workout
-app.get("/user", (req, res) => {
-  db.User.find({})
-    .then(dbUser => {
-      res.json(dbUser);
+app.get("/:id", (req, res) => {
+  db.Workout.find({ _id: mongoose.ObjectId(req.params.id) })
+    .then(dbWorkout => {
+      res.json(dbWorkout);
     })
     .catch(err => {
       res.json(err);
@@ -56,11 +57,11 @@ app.get("/user", (req, res) => {
 });
 
 // Route for Create Workout
-app.post("/submit", ({ body }, res) => {
-  db.Note.create(body)
-    .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
-    .then(dbUser => {
-      res.json(dbUser);
+app.post("/", ( req, res) => {
+  db.Workout.create(req.body)
+    .then(() => db.Workout.create({}, { new: true }))
+    .then(dbWorkout => {
+      res.json(dbWorkout);
     })
     .catch(err => {
       res.json(err);
@@ -68,27 +69,16 @@ app.post("/submit", ({ body }, res) => {
 });
 
 // Route for Update Workout
-
-
-/*
-app.get("/populateduser", (req, res) => {
-  // TODO
-  // =====
-  // Write the query to grab the documents from the User collection,
-  // and populate them with any associated Notes.
-  // TIP: Check the models out to see how the Notes refers to the User
-  db.User.find({})
-    .populate("notes")
-    .then(dbUser => {
-      console.log(dbUser);
-      res.json(dbUser);
+app.put("/:id", (req, res) => {
+  db.Note.create(req.body)
+    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.ObjectId(req.params.id)}, { $push: { notes: _id } }, { new: true }))
+    .then(dbWorkout => {
+      res.json(dbWorkout);
     })
     .catch(err => {
       res.json(err);
-    })
-
+    });
 });
-*/
 
 // Start the server
 app.listen(PORT, () => {
