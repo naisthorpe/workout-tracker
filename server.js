@@ -57,9 +57,8 @@ app.get("api/workouts/:id", (req, res) => {
 });
 
 // Route for Create Workout
-app.post("/api/workouts", ( req, res) => {
+app.post("/api/workouts", (req, res) => {
   db.Workout.create(req.body)
-    .then(console.log(req))
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -70,9 +69,20 @@ app.post("/api/workouts", ( req, res) => {
 
 // Route for Update Workout
 app.put("/api/workouts/:id", (req, res) => {
-  db.Workout.update(req.body)
-    .then(({ _id }) => db.Workout.findByIDAndUpdate({ _id: mongoose.Types.ObjectId(req.params.id)}))
+  db.Workout.findByIdAndUpdate((req.params.id), { $push: { exercises: req.body } })
+  .then(dbWorkout => {
+    res.json(dbWorkout);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
+// Route for stats page (range)
+app.get("/api/workouts/range", (req, res) => {
+  db.Workout.find({})
     .then(dbWorkout => {
+      console.log(dbWorkout);
       res.json(dbWorkout);
     })
     .catch(err => {
