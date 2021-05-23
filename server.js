@@ -16,7 +16,13 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: true
+  });
 
 /* HTML Routes */
 /* =========== */
@@ -70,12 +76,12 @@ app.post("/api/workouts", (req, res) => {
 // Route for Update Workout
 app.put("/api/workouts/:id", (req, res) => {
   db.Workout.findByIdAndUpdate((req.params.id), { $push: { exercises: req.body } })
-  .then(dbWorkout => {
-    res.json(dbWorkout);
-  })
-  .catch(err => {
-    res.json(err);
-  });
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.json(err);
+    });
 });
 
 // Route for stats page (range)
